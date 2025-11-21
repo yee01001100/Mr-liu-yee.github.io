@@ -1,5 +1,250 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Mr.liu的博客</title><link>https://yee01001100.github.io/Mr-liu-yee.github.io</link><description>It's Mr.liu's personal blog</description><copyright>Mr.liu的博客</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/127643341?v=4</url><title>avatar</title><link>https://yee01001100.github.io/Mr-liu-yee.github.io</link></image><lastBuildDate>Thu, 20 Nov 2025 14:08:07 +0000</lastBuildDate><managingEditor>Mr.liu的博客</managingEditor><ttl>60</ttl><webMaster>Mr.liu的博客</webMaster><item><title>The first time for my new own blog,and also for a test.</title><link>https://yee01001100.github.io/Mr-liu-yee.github.io/post/The%20first%20time%20for%20my%20new%20own%20blog%2Cand%20also%20for%20a%20test..html</link><description># 2025.11.20
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Mr.liu的博客</title><link>https://yee01001100.github.io/Mr-liu-yee.github.io</link><description>It's Mr.liu's personal blog</description><copyright>Mr.liu的博客</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/127643341?v=4</url><title>avatar</title><link>https://yee01001100.github.io/Mr-liu-yee.github.io</link></image><lastBuildDate>Fri, 21 Nov 2025 05:41:24 +0000</lastBuildDate><managingEditor>Mr.liu的博客</managingEditor><ttl>60</ttl><webMaster>Mr.liu的博客</webMaster><item><title>Minecraft 1.19.4 Fabric 开服指南</title><link>https://yee01001100.github.io/Mr-liu-yee.github.io/post/Minecraft%201.19.4%20Fabric%20-kai-fu-zhi-nan.html</link><description># Minecraft 1.19.4 Fabric 开服指南
+
+---
+
+## 目录
+1. [基础准备](#基础准备)
+2. [服务端启动](#服务端启动)
+3. [网络问题深度解析](#网络问题深度解析)
+4. [防火墙设置](#防火墙设置)
+5. [server.properties详解](#serverproperties详解)
+6. [Minecraft 1.19.4 服务端管理注意事项指南](#Minecraft 1.19.4 服务端管理注意事项指南)
+7. [网络诊断](#网络诊断)
+
+---
+
+# 基础准备
+
+- 运行服务端需要一些基础准备工作，如jdk17或更高版本
+
+以下是jdk的下载网址[Oracle-jdk](https://www.oracle.com/java/technologies/downloads/#jdk24-windows)
+
+安装完成后可输入以下指令验证是否安装完成
+
+```bash
+#此指令可显示你已安装的Java版本
+java -version
+```
+
+---
+
+# 服务端启动
+
+- 确认准备完全后，即可启动服务端
+
+  请先将fabric服务端文件移至一个单独的文件夹，以下是fabric服务端文件下载地址[fabric-server](https://fabricmc.net/use/server/) **请注意版本对应!**
+
+上述步骤完成后请在服务端文件所在文件夹的上方文件地址栏输入cmd以确保指令运行环境处在当前文件夹内，然后输入以下指令启动服务端
+
+```bash
+#此处假设服务端文件名为（fabric-server-mc.1.21.5-loader.0.16.14-launcher.1.0.3.jar），请根据实际情况做适当调整修改
+java -jar fabric-server-mc.1.21.5-loader.0.16.14-launcher.1.0.3.jar
+```
+
+之后服务端将会启动，并展开文件
+
+---
+
+# 网络问题深度解析
+
+---
+
+## **Minecraft Fabric服务器网络连通性技术文档**
+---
+
+## **一、核心网络问题解析**
+### **1. 局域网 vs 公网部署**
+| **场景**   | **优势**         | **限制**                 | 适用场景                |
+| ---------- | ---------------- | ------------------------ | ----------------------- |
+| **局域网** | 超低延迟（&lt;1ms） | 仅限同一物理网络设备访问 | 家庭/校园本地联机       |
+| **公网**   | 全球可访问       | 依赖公网IP/带宽质量      | 商业服务器/远程好友联机 |
+
+### **2. IPv4与IPv6协议对比**
+```mermaid
+graph LR
+    A[IP协议] --&gt; B[IPv4]
+    A --&gt; C[IPv6]
+    B --&gt; D[32位地址&lt;br&gt;4.3亿地址耗尽]
+    B --&gt; E[依赖NAT技术]
+    C --&gt; F[128位地址&lt;br&gt;340涧地址]
+    C --&gt; G[原生无NAT需求]
+```
+
+---
+
+## **二、NAT技术深度解析**
+### **1. NAT工作原理（以IPv4为例）**
+```plaintext
+ 局域网设备                NAT路由器              公网
+[192.168.1.10:25565]  --&gt; 转换公网IP:端口 --&gt; [玩家访问120.240.35.1:25565]
+       ↑                                           |
+       |___________ 数据包反向转换 ______________↓
+```
+
+### **2. NAT类型与影响**
+| **类型**        | 端口映射方式           | 服务器兼容性    |
+| --------------- | ---------------------- | --------------- |
+| **全锥型NAT**   | 开放所有外部端口       | ★★★★★           |
+| **受限锥型NAT** | 仅响应已连接IP         | ★★★☆☆           |
+| **对称型NAT**   | 每次连接使用随机新端口 | ★☆☆☆☆（需穿透） |
+
+---
+
+## **三、公网IPv4部署关键问题**
+### **1. 私网IP为何公网不可用？**
+```plaintext
+RFC 1918规定的私有地址范围：
+• 10.0.0.0 - 10.255.255.255
+• 172.16.0.0 - 172.31.255.255
+• 192.168.0.0 - 192.168.255.255
+
+这些地址在公网路由器中会被直接丢弃，导致：
+  本地IP 192.168.1.100 → 公网玩家 → 数据包无法路由返回
+```
+
+### **2. 公网部署解决方案**
+**步骤1：获取真实公网IP**
+
+```bash
+# 检测当前IP性质
+curl ifconfig.me
+# 若返回地址与路由器WAN口地址不一致 → 处于运营商级NAT（CGNAT）
+```
+
+**步骤2：端口转发配置（以TP-Link为例）**
+
+```markdown
+1. 登录路由器管理页（通常为192.168.0.1）
+2. 转发规则 → 虚拟服务器 → 添加新条目：
+   - 服务端口：25565
+   - 内部IP：服务器本地IP（如192.168.1.100）
+   - 协议：TCP/UDP
+3. 保存并重启路由器
+```
+
+**步骤3：防火墙放行**
+
+- 打开防火墙，开放服务端运行所需端口
+- 或完全关闭防火墙（简单但不推荐）
+
+
+---
+
+## **四、IPv6部署方案**
+### **1. 优势与配置要点**
+```markdown
+• 每个设备拥有**全球唯一公网地址**
+• 无需端口转发/NAT
+• 配置流程：
+  1. 确认运营商支持IPv6（光猫开启IPv4/IPv6双栈）
+  2. 路由器启用SLAAC/DHCPv6
+  3. 服务器获取2408:8207:xxxx格式地址
+```
+
+### **2. 连接方式示例**
+```yaml
+# server.properties配置
+server-ip=::
+# 玩家直连地址
+[2408:8207:abcd:ef01:1234:5678:9012:3456]:25565
+```
+
+---
+
+## **五、连通性测试指南**
+### **1. 诊断工具**
+| **工具**     | 命令示例               | 检测目标     |
+| ------------ | ---------------------- | ------------ |
+| `ping`       | `ping server-ip`       | 基础连通性   |
+| `telnet`     | `telnet ip 25565`      | 端口开放状态 |
+| `traceroute` | `tracert 120.240.35.1` | 路由路径     |
+| `nc`(Netcat) | `nc -zv ip 25565`      | 端口握手详情 |
+
+### **2. 常见故障排查**
+```markdown
+1. **端口阻塞**：
+   - 使用 https://portchecker.co 验证25565开放状态
+   
+2. **Windows防火墙拦截**：
+   - 入站规则放行Java(TM) Platform SE binary
+
+3. **运营商限制**：
+   - 家庭宽带通常封锁80/443外所有端口 → 需备案开埠
+```
+
+---
+
+## **六、进阶优化建议**
+1. **动态DNS支持**（适用于非固定IP）
+   
+   ```markdown
+   - 使用花生壳/No-IP服务绑定域名
+   - 配置路由器DDNS自动更新
+   ```
+   
+3. **IPv4/IPv6双栈部署**
+   ```properties
+   # fabric服务器启动参数
+   java -Djava.net.preferIPv6Addresses=true -jar fabric-server-launch.jar
+   ```
+
+---
+
+## **七、内网穿透解决方案**  
+### **1. 内网穿透核心原理**
+```plaintext
+ 玩家客户端 → 穿透服务器（公网） → 穿透客户端（本地） → Minecraft服务器
+       ↑                                         |
+       |___________ 反向隧道连接 __________________↓
+```
+&gt; **技术本质**：通过第三方公网服务器建立'反向代理隧道'，绕过NAT限制
+
+### **2. 主流穿透方案对比**
+| **方案类型**      | 代表工具             | 延迟影响 | 配置复杂度 | 适用场景            |
+| ----------------- | -------------------- | -------- | ---------- | ------------------- |
+| **TCP/UDP隧道**   | frp / ngrok          | 20-50ms  | 中等       | 常规MC服务器        |
+| **P2P穿透**       | ZeroTier / Tailscale | 5-15ms   | 简单       | 好友联机/低延迟需求 |
+| **WebSocket隧道** | Cloudflared          | 50-100ms | 复杂       | 严格防火墙环境      |
+| **商业托管服务**  | Playit.gg            | 30-80ms  | 极简       | 零配置快速部署      |
+
+### **3. 详细配置指南**
+#### **方案实例：frp穿透（推荐）**
+
+- **sakurafrp**
+
+  此网站提供了较为简便与廉价的局域网穿透工具，网址→[sakurafrp](https://www.natfrp.com/)
+
+  下方为网站视频教学网址↓
+
+  [都2025年了你还不会使用樱花来我的世界联机？[Minecraft樱花内网穿透（Natfrp）联机教程]](https://www.bilibili.com/video/BV1DdF4eJEBm/?spm_id_from=333.337.search-card.all.click&amp;vd_source=c8d0f1ade16bb6d69206a3cdb0173a57)
+
+**注：上述为网络连通性专业文档，可配合下述视频搭配学习理解**
+
+[基础开服教程](https://www.bilibili.com/video/BV1rq4y117uA/?spm_id_from=333.337.search-card.all.click&amp;vd_source=c8d0f1ade16bb6d69206a3cdb0173a57)
+
+[Windows命令初学者必需知道](https://www.bilibili.com/video/BV1xj411v7Xd/?spm_id_from=333.1387.favlist.content.click&amp;vd_source=c8d0f1ade16bb6d69206a3cdb0173a57)
+
+[子网划分](https://www.bilibili.com/video/BV1HT411U7jV/?spm_id_from=333.1387.favlist.content.click&amp;vd_source=c8d0f1ade16bb6d69206a3cdb0173a57)
+
+[【MC开服】插件、模组我全都要！mohist服务端教学](https://www.bilibili.com/video/BV1pS4y1B73f/?spm_id_from=333.1387.favlist.content.click&amp;vd_source=c8d0f1ade16bb6d69206a3cdb0173a57)
+
+[Windows我的世界开服详细教程](https://www.bilibili.com/video/BV1NQ4y1U7nS/?spm_id_from=333.1387.favlist.content.click&amp;vd_source=c8d0f1ade16bb6d69206a3cdb0173a57)
+
+[【mc开服】教你白嫖运营商公网ipv6跟好兄弟联机](https://www.bilibili.com/video/BV1Lb4y1o7SF/?spm_id_from=333.1387.favlist.content.click&amp;vd_source=c8d0f1ade16bb6d69206a3cdb0173a57)
+
+[什么是NAT？一分钟搞懂网络地址转换的秘密！](https://www.bilibili.com/video/BV19EyVYVEye/?spm_id_from=333.337.search-card.all.click&amp;vd_source=c8d0f1ade16bb6d69206a3cdb0173a57)
+
+- 以下为进阶视频教学
+
+  [小白成神之路，网络知识看这一期足矣！软路由 桥接 端口转发 旁路由 单臂路由 IPv4 IPv6 DDNS](https://www.bilibili.com/video/BV1Gz4y1r791/?spm_id_from=333.337.search-card.all.click&amp;vd_source=c8d0f1ade16bb6d69206a3cdb0173a57)
+
+# 防火墙设置
+
+---
+
+### **Minecraft Java版 Windows 开服防火墙设置指南**  
+**核心目标**：允许合法流量进入服务器，阻止非法访问，保障服务器安全。</description><guid isPermaLink="true">https://yee01001100.github.io/Mr-liu-yee.github.io/post/Minecraft%201.19.4%20Fabric%20-kai-fu-zhi-nan.html</guid><pubDate>Fri, 21 Nov 2025 05:36:34 +0000</pubDate></item><item><title>The first time for my new own blog,and also for a test.</title><link>https://yee01001100.github.io/Mr-liu-yee.github.io/post/The%20first%20time%20for%20my%20new%20own%20blog%2Cand%20also%20for%20a%20test..html</link><description># 2025.11.20
 Well,hello,it's my blog,and.....maybe I should left my e-mail there.
 1707545448@qq.com
 That's all.。</description><guid isPermaLink="true">https://yee01001100.github.io/Mr-liu-yee.github.io/post/The%20first%20time%20for%20my%20new%20own%20blog%2Cand%20also%20for%20a%20test..html</guid><pubDate>Thu, 20 Nov 2025 13:57:01 +0000</pubDate></item></channel></rss>
