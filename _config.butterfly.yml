@@ -18,10 +18,12 @@ nav:
   fixed: false
 
 menu:
-  # Home: / || fas fa-home
-  # List||fas fa-list:
-  #   Music: /music/ || fas fa-music
-  #   Movie: /movies/ || fas fa-video
+  Home: / || fas fa-home
+  Tags: /tags/ || fas fa-tags
+  List||fas fa-list:
+    Categories: /categories/ || fas fa-folder-open
+    Music: /music/ || fas fa-music
+    Movie: /movies/ || fas fa-video
 
 # --------------------------------------
 # Code Blocks Settings

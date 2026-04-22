@@ -1,5 +1,9 @@
 ---
 title: Minecraft 1.19.4 Fabric 开服指南
+date: 2026-04-19 18:23:00
+categories: [教程, MinecraftServer]
+tags:
+  - Server
 ---
 
 # Minecraft 1.19.4 Fabric 开服指南
