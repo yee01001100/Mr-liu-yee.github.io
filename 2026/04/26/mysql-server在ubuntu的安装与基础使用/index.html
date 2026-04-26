@@ -1,0 +1,377 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>mysql-server在ubuntu的安装与基础使用 | yee01001100</title><meta name="author" content="yee01001100"><meta name="copyright" content="yee01001100"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="安装1.终端普通安装 更新软件包列表  在终端中执行以下命令更新APT软件源 1sudo apt update   安装MySQL服务器  1sudo apt install mysql-server -y   启动MySQL服务并设置开机自启  安装完成后，服务通常会自动启动。你可以通过以下命令确认并设置开机自启： 123456# 设置开机自启sudo systemctl enable mysq">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mysql-server在ubuntu的安装与基础使用">
+<meta property="og:url" content="https://yee01001100.github.io/2026/04/26/mysql-server%E5%9C%A8ubuntu%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:site_name" content="yee01001100">
+<meta property="og:description" content="安装1.终端普通安装 更新软件包列表  在终端中执行以下命令更新APT软件源 1sudo apt update   安装MySQL服务器  1sudo apt install mysql-server -y   启动MySQL服务并设置开机自启  安装完成后，服务通常会自动启动。你可以通过以下命令确认并设置开机自启： 123456# 设置开机自启sudo systemctl enable mysq">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yee01001100.github.io/img/butterfly-icon.png">
+<meta property="article:published_time" content="2026-04-26T12:22:59.000Z">
+<meta property="article:modified_time" content="2026-04-26T14:53:55.456Z">
+<meta property="article:author" content="yee01001100">
+<meta property="article:tag" content="sql">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yee01001100.github.io/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "mysql-server在ubuntu的安装与基础使用",
+  "url": "https://yee01001100.github.io/2026/04/26/mysql-server%E5%9C%A8ubuntu%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8/",
+  "image": "https://yee01001100.github.io/img/butterfly-icon.png",
+  "datePublished": "2026-04-26T12:22:59.000Z",
+  "dateModified": "2026-04-26T14:53:55.456Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "yee01001100",
+      "url": "https://yee01001100.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://yee01001100.github.io/2026/04/26/mysql-server%E5%9C%A8ubuntu%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'mysql-server在ubuntu的安装与基础使用',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 8.1.1"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">8</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/top.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"></a><a class="nav-page-title" href="/"><span class="site-name">mysql-server在ubuntu的安装与基础使用</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> List</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">mysql-server在ubuntu的安装与基础使用</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-04-26T12:22:59.000Z" title="发表于 2026-04-26 20:22:59">2026-04-26</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-04-26T14:53:55.456Z" title="更新于 2026-04-26 22:53:55">2026-04-26</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/web/">web</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/web/SQL/">SQL</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><h2 id="1-终端普通安装"><a href="#1-终端普通安装" class="headerlink" title="1.终端普通安装"></a>1.终端普通安装</h2><ol>
+<li><strong>更新软件包列表</strong></li>
+</ol>
+<p>在终端中执行以下命令更新APT软件源</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt update</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><strong>安装MySQL服务器</strong></li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt install mysql-server -y</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li><strong>启动MySQL服务并设置开机自启</strong></li>
+</ol>
+<p>安装完成后，服务通常会自动启动。你可以通过以下命令确认并设置开机自启：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 设置开机自启</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl <span class="built_in">enable</span> mysql</span><br><span class="line"><span class="comment"># 立即启动服务</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl start mysql</span><br><span class="line"><span class="comment"># 检查服务运行状态</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl status mysql</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li><strong>运行安全初始化脚本</strong></li>
+</ol>
+<p>这是<strong>安全关键一步</strong>，脚本会引导你设置root密码，移除匿名用户和测试数据库等。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> mysql_secure_installation</span><br></pre></td></tr></table></figure>
+
+<p>根据提示完成设置。新版MySQL可能会要求你首先通过<code>sudo mysql</code>命令登录后，为root用户设置密码并更新认证插件，之后才能运行此脚本。</p>
+<ol start="5">
+<li><strong>直接登录 (可选)</strong></li>
+</ol>
+<p>在某些新版本的Ubuntu系统中，root用户默认使用<code>auth_socket</code>插件进行认证，这意味着你可以直接通过系统的root权限登录MySQL，而无需密码。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> mysql</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-通用二进制包安装"><a href="#2-通用二进制包安装" class="headerlink" title="2.通用二进制包安装"></a>2.通用二进制包安装</h2><p>当包管理器版本不满足需求，或需要在离线环境、实现多实例部署时，可使用通用二进制包。此方法适用于所有Linux发行版。</p>
+<ol>
+<li><strong>下载和解压</strong></li>
+</ol>
+<p>从<strong>MySQL官方社区版下载页面</strong>找到“Linux - Generic”版本并下载。然后解压到<code>/usr/local</code>目录：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">tar -xf mysql-8.4.0-linux-glibc2.17-x86_64.tar.xz -C /usr/local/</span><br><span class="line"><span class="built_in">cd</span> /usr/local</span><br><span class="line"><span class="comment"># 创建软链接，方便版本切换</span></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">ln</span> -s mysql-8.4.0-linux-glibc2.17-x86_64 mysql</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><strong>创建MySQL用户并设定权限</strong></li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> useradd -r -s /sbin/nologin mysql</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">chown</span> -R mysql:mysql /usr/local/mysql</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li><strong>初始化数据库</strong></li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> /usr/local/mysql/bin/mysqld --initialize --user=mysql --basedir=/usr/local/mysql --datadir=/usr/local/mysql/data</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li><strong>配置并启动服务</strong></li>
+</ol>
+<p>创建配置文件<code>/etc/my.cnf</code>并编辑至少包含<code>basedir</code>和<code>datadir</code>的内容。<br>然后创建systemd服务文件或直接启动：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> /usr/local/mysql/bin/mysqld_safe --user=mysql &amp;</span><br></pre></td></tr></table></figure>
+
+<h1 id="基础使用"><a href="#基础使用" class="headerlink" title="基础使用"></a>基础使用</h1><p>完成安装后，你需要掌握一些基础操作来管理数据库。</p>
+<ol>
+<li><strong>连接与退出MySQL服务器</strong></li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 登录到MySQL服务器</span></span><br><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure>
+
+<p>输入密码验证成功后，会出现 <code>mysql&gt;</code> 提示符，此时便可输入SQL命令了。要退出，输入 <code>exit</code> 并回车即可。</p>
+<ol start="2">
+<li><strong>数据库基础操作(CRUD)</strong></li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th>命令示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>创建</strong>数据库</td>
+<td><code>CREATE DATABASE my_database;</code></td>
+</tr>
+<tr>
+<td><strong>查看</strong>所有数据库</td>
+<td><code>SHOW DATABASES;</code></td>
+</tr>
+<tr>
+<td><strong>选择</strong>数据库</td>
+<td><code>USE my_database;</code></td>
+</tr>
+<tr>
+<td><strong>删除</strong>数据库</td>
+<td><code>DROP DATABASE my_database;</code></td>
+</tr>
+<tr>
+<td><strong>创建</strong>数据表</td>
+<td><code>CREATE TABLE users (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(50), email VARCHAR(100));</code></td>
+</tr>
+<tr>
+<td><strong>查看</strong>表结构</td>
+<td><code>DESCRIBE users;</code></td>
+</tr>
+<tr>
+<td><strong>插入</strong>数据</td>
+<td><code>INSERT INTO users (name, email) VALUES (&#39;Alice&#39;, &#39;alice@example.com&#39;);</code></td>
+</tr>
+<tr>
+<td><strong>查询</strong>数据</td>
+<td><code>SELECT * FROM users;</code></td>
+</tr>
+<tr>
+<td><strong>更新</strong>数据</td>
+<td><code>UPDATE users SET email = &#39;new_email@example.com&#39; WHERE name = &#39;Alice&#39;;</code></td>
+</tr>
+<tr>
+<td><strong>删除</strong>数据</td>
+<td><code>DELETE FROM users WHERE name = &#39;Alice&#39;;</code></td>
+</tr>
+</tbody></table>
+<ol start="3">
+<li><strong>用户与权限管理</strong></li>
+</ol>
+<ul>
+<li><strong>创建用户</strong>：创建一个新用户并设置密码。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">USER</span> <span class="string">&#x27;newuser&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> IDENTIFIED <span class="keyword">BY</span> <span class="string">&#x27;user_password&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>如果希望该用户能从<strong>任何IP地址</strong>连接到数据库，请将<code>localhost</code>替换为<code>%</code>。</p>
+</blockquote>
+<ul>
+<li><strong>授予权限</strong>：授予用户对特定数据库的权限。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 授予用户对 my_database 数据库所有表的所有权限</span></span><br><span class="line"><span class="keyword">GRANT</span> <span class="keyword">ALL</span> PRIVILEGES <span class="keyword">ON</span> my_database.<span class="operator">*</span> <span class="keyword">TO</span> <span class="string">&#x27;newuser&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>刷新权限</strong>：使权限更改立即生效。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FLUSH PRIVILEGES;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>查看用户权限</strong></li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SHOW</span> GRANTS <span class="keyword">FOR</span> <span class="string">&#x27;newuser&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>删除用户</strong></li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">USER</span> <span class="string">&#x27;newuser&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li><strong>系统服务管理</strong></li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th>命令 (systemctl)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>启动</strong> MySQL 服务</td>
+<td><code>sudo systemctl start mysqld</code> (或 <code>mysql</code>)</td>
+</tr>
+<tr>
+<td><strong>停止</strong> MySQL 服务</td>
+<td><code>sudo systemctl stop mysqld</code> (或 <code>mysql</code>)</td>
+</tr>
+<tr>
+<td><strong>重启</strong> MySQL 服务</td>
+<td><code>sudo systemctl restart mysqld</code> (或 <code>mysql</code>)</td>
+</tr>
+<tr>
+<td><strong>查看</strong>服务状态</td>
+<td><code>sudo systemctl status mysqld</code> (或 <code>mysql</code>)</td>
+</tr>
+<tr>
+<td><strong>设置</strong>开机自启</td>
+<td><code>sudo systemctl enable mysqld</code> (或 <code>mysql</code>)</td>
+</tr>
+<tr>
+<td><strong>禁用</strong>开机自启</td>
+<td><code>sudo systemctl disable mysqld</code> (或 <code>mysql</code>)</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>注：在Ubuntu系统中，服务名通常为<code>mysql</code>；而在CentOS&#x2F;Rocky Linux&#x2F;openSUSE中，服务名通常为<code>mysqld</code>。</p>
+</blockquote>
+<ol start="5">
+<li><strong>开启远程访问</strong></li>
+</ol>
+<p>如果需要从本机以外的其他设备连接到你的MySQL服务器，需要进行以下配置</p>
+<ul>
+<li><strong>创建允许远程访问的用户</strong></li>
+</ul>
+<p>在MySQL中创建一个允许从任何IP（<code>%</code>）或特定IP登录的用户，并授予权限：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">USER</span> <span class="string">&#x27;remote_user&#x27;</span>@<span class="string">&#x27;%&#x27;</span> IDENTIFIED <span class="keyword">BY</span> <span class="string">&#x27;StrongPassword!&#x27;</span>;</span><br><span class="line"><span class="keyword">GRANT</span> <span class="keyword">ALL</span> PRIVILEGES <span class="keyword">ON</span> <span class="operator">*</span>.<span class="operator">*</span> <span class="keyword">TO</span> <span class="string">&#x27;remote_user&#x27;</span>@<span class="string">&#x27;%&#x27;</span> <span class="keyword">WITH</span> <span class="keyword">GRANT</span> OPTION;</span><br><span class="line">FLUSH PRIVILEGES;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>配置MySQL监听所有网络接口</strong></li>
+</ul>
+<p>编辑MySQL的配置文件（通常是<code>/etc/mysql/mysql.conf.d/mysqld.cnf</code>或<code>/etc/my.cnf</code>），将 <code>bind-address</code> 这一行设置为 <code>0.0.0.0</code>。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bind-address = 0.0.0.0</span><br></pre></td></tr></table></figure>
+
+<p>保存配置文件后，需要<strong>重启MySQL服务</strong>才能使更改生效。</p>
+<ul>
+<li><strong>配置防火墙</strong></li>
+</ul>
+<p>确保你的Linux防火墙（如<code>firewalld</code>或<code>ufw</code>）允许外部访问MySQL的默认端口<code>3306</code>。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用firewalld</span></span><br><span class="line"><span class="built_in">sudo</span> firewall-cmd --permanent --add-port=3306/tcp</span><br><span class="line"><span class="built_in">sudo</span> firewall-cmd --reload</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用ufw (Uncomplicated Firewall)</span></span><br><span class="line"><span class="built_in">sudo</span> ufw allow 3306/tcp</span><br></pre></td></tr></table></figure>
+
+<h1 id="最后注意"><a href="#最后注意" class="headerlink" title="最后注意"></a>最后注意</h1><ol>
+<li><p><strong>强密码策略</strong>：为所有MySQL用户（尤其是<code>root</code>）设置足够复杂的密码，并妥善保管。</p>
+</li>
+<li><p><strong>开启防火墙</strong>：通过防火墙限制只有可信的IP地址能够访问3306端口，避免将数据库完全暴露在公网。</p>
+</li>
+<li><p><strong>最小权限原则</strong>：创建应用使用的专用用户，并只授予其完成工作所必需的最小权限（例如，只对特定数据库有<code>SELECT, INSERT, UPDATE, DELETE</code>权限），而不是滥用<code>root</code>账户。</p>
+</li>
+<li><p><strong>定期备份</strong>：使用 <code>mysqldump</code> 工具，养成定期备份数据库的习惯，以防数据丢失。</p>
+</li>
+<li><p><strong>定期更新</strong>：关注MySQL的安全公告，运行 <code>sudo apt upgrade</code> (Debian&#x2F;Ubuntu) 或 <code>sudo yum update</code> (RHEL&#x2F;CentOS) 来更新MySQL和相关组件，以修复已知的安全漏洞。</p>
+</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://yee01001100.github.io">yee01001100</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://yee01001100.github.io/2026/04/26/mysql-server%E5%9C%A8ubuntu%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8/">https://yee01001100.github.io/2026/04/26/mysql-server%E5%9C%A8ubuntu%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://yee01001100.github.io" target="_blank">yee01001100</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/sql/">sql</a></div><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2026/04/26/JAVA%E8%AF%AD%E6%B3%95%E9%9B%86/" title="JAVA语法集"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">JAVA语法集</div></div><div class="info-2"><div class="info-item-1">明白了，您需要一份更完整、详尽的 Java 语法文档，而不是简化的速查表。下面我将按照常规的教学参考风格，系统性地介绍 Java 的核心语法，包括详细的说明和充足的代码示例，覆盖从基础到高级的常用内容。  Java 语法完整参考手册1. 基本结构1.1 源文件组织一个 Java 源文件通常包含以下部分（按顺序）：  包声明（可选） 导入语句（可选） 类&#x2F;接口&#x2F;枚举&#x2F;记录定义（至少一个）  1234567891011121314// 包声明（必须放在第一行，注释除外）package com.example.myapp;// 导入其他包中的类import java.util.List;import java.util.ArrayList;// 可选：静态导入，导入静态成员import static java.lang.Math.PI;// 类定义（每个文件最多有一个 public 类，且类名与文件名相同）public class MyClass &#123;    // 类体&#125;  1.2 程序入口点Java 应用程序的入口是 main 方法，签...</div></div></div></a><a class="pagination-related" href="/2026/04/22/20260422%E6%9B%B4%E6%96%B0%E6%97%A5%E5%BF%97/" title="20260422更新日志"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">20260422更新日志</div></div><div class="info-2"><div class="info-item-1">20260422更新日志 增加了分类标签与tags，并对往期文章做分类处理 在进入界面右上角增加了Home，Tags，List按钮，后期再进行扩展   2026-04-22  </div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/04/21/sql%E6%B3%A8%E5%85%A5%E4%B8%8E%E7%BB%95%E8%BF%87/" title="sql注入与绕过"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-21</div><div class="info-item-2">sql注入与绕过</div></div><div class="info-2"><div class="info-item-1">SQL注入是通过将恶意SQL代码插入Web表单、URL参数或查询字符串中，利用应用程序对用户输入验证不足的漏洞，欺骗数据库执行非授权操作的安全威胁，其核心在于数据与指令的混淆，而绕过技术则针对安全防护机制设计，旨在规避检测规则。 一、SQL注入原理详解1. 根本成因 数据与指令混淆：应用程序将用户输入直接拼接到SQL查询中，未区分数据与指令的语义。 过滤不严：对特殊字符（如单引号、分号）和SQL关键字（如SELECT、UNION）未进行有效过滤或转义。 动态拼接：使用字符串拼接方式构造SQL语句，而非参数化查询。  2. 工作机制当应用程序执行类似以下代码时： 1SELECT * FROM users WHERE username = &#x27;&quot; + userInput + &quot;&#x27;&quot; 攻击者输入admin&#39; OR &#39;1&#39;=&#39;1，将使查询变为： 1SELECT * FROM users WHERE username = &#x27;admin&#x27; OR &#x27;1&#x27;=&#x27;1&#x...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">yee01001100</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">8</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/yee01001100"><i class="fab fa-github"></i><span>To my github</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/yee01001100" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:yee01001100@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">None</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-number">1.</span> <span class="toc-text">安装</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E7%BB%88%E7%AB%AF%E6%99%AE%E9%80%9A%E5%AE%89%E8%A3%85"><span class="toc-number">1.1.</span> <span class="toc-text">1.终端普通安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E9%80%9A%E7%94%A8%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%8C%85%E5%AE%89%E8%A3%85"><span class="toc-number">1.2.</span> <span class="toc-text">2.通用二进制包安装</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8"><span class="toc-number">2.</span> <span class="toc-text">基础使用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9C%80%E5%90%8E%E6%B3%A8%E6%84%8F"><span class="toc-number">3.</span> <span class="toc-text">最后注意</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/26/JAVA%E8%AF%AD%E6%B3%95%E9%9B%86/" title="JAVA语法集">JAVA语法集</a><time datetime="2026-04-26T12:50:11.000Z" title="发表于 2026-04-26 20:50:11">2026-04-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/26/mysql-server%E5%9C%A8ubuntu%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8/" title="mysql-server在ubuntu的安装与基础使用">mysql-server在ubuntu的安装与基础使用</a><time datetime="2026-04-26T12:22:59.000Z" title="发表于 2026-04-26 20:22:59">2026-04-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/22/20260422%E6%9B%B4%E6%96%B0%E6%97%A5%E5%BF%97/" title="20260422更新日志">20260422更新日志</a><time datetime="2026-04-22T12:24:43.000Z" title="发表于 2026-04-22 20:24:43">2026-04-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/21/sql%E6%B3%A8%E5%85%A5%E4%B8%8E%E7%BB%95%E8%BF%87/" title="sql注入与绕过">sql注入与绕过</a><time datetime="2026-04-21T07:12:00.000Z" title="发表于 2026-04-21 15:12:00">2026-04-21</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/19/Minecraft%E5%BC%80%E6%9C%8D%E6%8C%87%E5%8D%97/" title="Minecraft 1.19.4 Fabric 开服指南">Minecraft 1.19.4 Fabric 开服指南</a><time datetime="2026-04-19T10:23:00.000Z" title="发表于 2026-04-19 18:23:00">2026-04-19</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By yee01001100</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.1</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
