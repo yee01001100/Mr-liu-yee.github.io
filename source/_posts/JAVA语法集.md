@@ -3,8 +3,7 @@ title: JAVA语法集
 date: 2026-04-26 20:50:11
 tags:
   - JAVA
-categories:
-  - JAVA
+categories: [语法, JAVA]
 ---
 
 ---
